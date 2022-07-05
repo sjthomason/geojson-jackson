@@ -1,95 +1,98 @@
 package org.geojson;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.stream.Stream;
 
-@RunWith(Parameterized.class)
 public class GeoJsonObjectVisitorTest {
 
-	private final GeoJsonObject geoJsonObject;
 	private GeoJsonObjectVisitor<GeoJsonObject> instance = new GeoJsonObjectVisitor<GeoJsonObject>() {
 
 		@Override
 		public GeoJsonObject visit(GeometryCollection geoJsonObject) {
-			Assert.assertEquals(GeometryCollection.class, geoJsonObject.getClass());
+			Assertions.assertEquals(GeometryCollection.class, geoJsonObject.getClass());
 			return geoJsonObject;
 		}
 
 		@Override
 		public GeoJsonObject visit(FeatureCollection geoJsonObject) {
-			Assert.assertEquals(FeatureCollection.class, geoJsonObject.getClass());
+			Assertions.assertEquals(FeatureCollection.class, geoJsonObject.getClass());
 			return geoJsonObject;
 		}
 
 		@Override
 		public GeoJsonObject visit(Point geoJsonObject) {
-			Assert.assertEquals(Point.class, geoJsonObject.getClass());
+			Assertions.assertEquals(Point.class, geoJsonObject.getClass());
 			return geoJsonObject;
 		}
 
 		@Override
 		public GeoJsonObject visit(Feature geoJsonObject) {
-			Assert.assertEquals(Feature.class, geoJsonObject.getClass());
+			Assertions.assertEquals(Feature.class, geoJsonObject.getClass());
 			return geoJsonObject;
 		}
 
 		@Override
 		public GeoJsonObject visit(MultiLineString geoJsonObject) {
-			Assert.assertEquals(MultiLineString.class, geoJsonObject.getClass());
+			Assertions.assertEquals(MultiLineString.class, geoJsonObject.getClass());
 			return geoJsonObject;
 		}
 
 		@Override
 		public GeoJsonObject visit(Polygon geoJsonObject) {
-			Assert.assertEquals(Polygon.class, geoJsonObject.getClass());
+			Assertions.assertEquals(Polygon.class, geoJsonObject.getClass());
 			return geoJsonObject;
 		}
 
 		@Override
 		public GeoJsonObject visit(MultiPolygon geoJsonObject) {
-			Assert.assertEquals(MultiPolygon.class, geoJsonObject.getClass());
+			Assertions.assertEquals(MultiPolygon.class, geoJsonObject.getClass());
 			return geoJsonObject;
 		}
 
 		@Override
 		public GeoJsonObject visit(MultiPoint geoJsonObject) {
-			Assert.assertEquals(MultiPoint.class, geoJsonObject.getClass());
+			Assertions.assertEquals(MultiPoint.class, geoJsonObject.getClass());
 			return geoJsonObject;
 		}
 
 		@Override
 		public GeoJsonObject visit(LineString geoJsonObject) {
-			Assert.assertEquals(LineString.class, geoJsonObject.getClass());
+			Assertions.assertEquals(LineString.class, geoJsonObject.getClass());
 			return geoJsonObject;
 		}
 	};
-	public GeoJsonObjectVisitorTest(GeoJsonObject geoJsonObject) {
-		this.geoJsonObject = geoJsonObject;
-	}
 
-	@Parameterized.Parameters
-	public static Collection<Object[]> data() {
-		return Arrays.asList(new Object[][] { { new GeometryCollection() }, { new FeatureCollection() },
-				{ new Point(12D, 13D) }, { new Feature() },
-				{ new MultiLineString(Arrays.asList(new LngLatAlt(12D, 13D))) }, { new Polygon() },
-				{ new MultiPolygon() }, { new MultiPoint() }, { new LineString() } });
-	}
-
-	@Test
-	public void should_visit_right_class() {
+	@ParameterizedTest
+	@MethodSource("getArguments")
+	public void should_visit_right_class(GeoJsonObject geoJsonObject) {
 		// When
 		GeoJsonObject result = geoJsonObject.accept(this.instance);
 		// Then
-		Assert.assertEquals(geoJsonObject, result);
+		Assertions.assertEquals(geoJsonObject, result);
 	}
 
-	@Test
-	public void itShouldAdapter() throws Exception {
-		Assert.assertNull(geoJsonObject.accept(new GeoJsonObjectVisitor.Adapter<Void>()));
+	@ParameterizedTest
+	@MethodSource("getArguments")
+	public void itShouldAdapter(GeoJsonObject geoJsonObject) throws Exception {
+		Assertions.assertNull(geoJsonObject.accept(new GeoJsonObjectVisitor.Adapter<Void>()));
 	}
+
+	private static Stream<Arguments> getArguments() {
+		return Stream.of(
+				Arguments.of(new GeometryCollection()),
+				Arguments.of(new FeatureCollection()),
+				Arguments.of(new Point(12D, 13D)),
+				Arguments.of(new Feature()),
+				Arguments.of(new MultiLineString(Arrays.asList(new LngLatAlt(12D, 13D)))),
+				Arguments.of(new Polygon()),
+				Arguments.of(new MultiPolygon()),
+				Arguments.of(new MultiPoint()),
+				Arguments.of(new LineString()));
+	}
+
 }

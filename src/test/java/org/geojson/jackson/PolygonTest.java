@@ -3,13 +3,14 @@ package org.geojson.jackson;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.geojson.LngLatAlt;
 import org.geojson.Polygon;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PolygonTest {
 
@@ -32,10 +33,12 @@ public class PolygonTest {
 				+ "[[100.2,0.2],[100.8,0.2],[100.8,0.8],[100.2,0.8],[100.2,0.2]]]}", mapper.writeValueAsString(polygon));
 	}
 
-	@Test(expected = RuntimeException.class)
+	@Test
 	public void itShouldFailOnAddInteriorRingWithoutExteriorRing() throws Exception {
 		Polygon polygon = new Polygon();
-		polygon.addInteriorRing(MockData.EXTERNAL);
+		Assertions.assertThrows(RuntimeException.class, () -> {
+			polygon.addInteriorRing(MockData.EXTERNAL);
+		});
 	}
 
 	@Test

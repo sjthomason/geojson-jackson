@@ -1,9 +1,8 @@
 package org.geojson.jackson;
 
 import org.geojson.LngLatAlt;
-import org.junit.Assert;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class LngLatAltSerializerTest
@@ -15,6 +14,6 @@ public class LngLatAltSerializerTest
         LngLatAlt position = new LngLatAlt(49.43245, 52.42345, 120.34626);
         String correctJson = "[49.43245,52.42345,120.34626]";
         String producedJson = new ObjectMapper().writeValueAsString(position);
-        Assert.assertEquals(correctJson, producedJson);
+        Assertions.assertEquals(correctJson, producedJson);
     }
 }
