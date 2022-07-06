@@ -11,17 +11,17 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 public class LngLatAltSerializer extends JsonSerializer<LngLatAlt> {
 
     @Override
-    public void serialize(LngLatAlt value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
-        jgen.writeStartArray();
-        jgen.writeNumber(value.getLongitude());
-        jgen.writeNumber(value.getLatitude());
+    public void serialize(LngLatAlt value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+        gen.writeStartArray();
+        gen.writeNumber(value.getLongitude());
+        gen.writeNumber(value.getLatitude());
         if (value.hasAltitude()) {
-            jgen.writeNumber(value.getAltitude());
+            gen.writeNumber(value.getAltitude());
 
             for (double d : value.getAdditionalElements()) {
-                jgen.writeNumber(d);
+                gen.writeNumber(d);
             }
         }
-        jgen.writeEndArray();
+        gen.writeEndArray();
     }
 }
